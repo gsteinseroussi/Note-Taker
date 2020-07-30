@@ -36,13 +36,16 @@ app.get("/api/notes", function (req, res) {
 
 app.post("/api/notes", function (req, res) {
   const newNote = req.body;
-  fs.readFile("./db/db.json", "utf8", (err, data) => {
-    if (err) {
-      throw err;
-    }
+  fs.readFile("db/db.json", (err, data) => {
+    if (err) throw err;
+    
 
-    const dbContent = JSON.parse("data");
-    console.log(dbContent);
+    const notes = JSON.parse(data);
+    notes.push(newNote);
+    fs.writeFile("db/db.json", JSON.stringify(notes), err => {
+    if(err) throw err;
+      console.log("success");
+    })
 
     // data.append(newNote);
     // fs.writeFile("./db/db.json", data, function (err) {
