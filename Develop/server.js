@@ -29,23 +29,37 @@ app.get("*", function (req, res) {
 });
 
 //creating the api routes:
-
+//get route:
 app.get("/api/notes", function (req, res) {
   return res.json(notes);
 });
 
+//post route:
+
 app.post("/api/notes", function (req, res) {
   const newNote = req.body;
+  
   fs.readFile("db/db.json", (err, data) => {
     if (err) throw err;
     
 
-    const notes = JSON.parse(data);
+    let notes = JSON.parse(data);
+    newNote.id = notes.length + 1;
     notes.push(newNote);
     fs.writeFile("db/db.json", JSON.stringify(notes), err => {
     if(err) throw err;
       console.log("success");
     })
+    
+    //delete route:
+    
+    app.delete("/api/notes/:id", function (req, res){
+    Note.findOneAndRemove({
+  _id: req.params.id
+ }, (err) => {
+  if(err) throw err;
+    })
+    });
 
     // data.append(newNote);
     // fs.writeFile("./db/db.json", data, function (err) {
