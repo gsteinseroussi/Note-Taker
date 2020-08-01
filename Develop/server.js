@@ -53,13 +53,7 @@ app.post("/api/notes", function (req, res) {
     
     //delete route:
     
-    app.delete("/api/notes/:id", function (req, res){
-    Note.findOneAndRemove({
-  _id: req.params.id
- }, (err) => {
-  if(err) throw err;
-    })
-    });
+    
 
     // data.append(newNote);
     // fs.writeFile("./db/db.json", data, function (err) {
