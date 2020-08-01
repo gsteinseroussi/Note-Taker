@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
-const { isBuffer } = require("util");
+const note = require("./db/notes");
 
 //sets up the express app
 
@@ -24,6 +23,10 @@ app.get("/notes", function (req, res) {
   res.sendFile(path.join(__dirname, "public/notes.html"));
 });
 
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
@@ -31,44 +34,39 @@ app.get("*", function (req, res) {
 //creating the api routes:
 //get route:
 app.get("/api/notes", function (req, res) {
-  return res.json(notes);
+  note
+    .getNotes()
+    .then(function (notes) {
+      res.json(notes);
+      console.log(res.json(notes));
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 });
 
 //post route:
 
 app.post("/api/notes", function (req, res) {
-  // let idNum = 1;
-  const newNote = req.body;
-
-  // idNum++;
-  // newNote.id = idNum;
-  fs.readFile("db/db.json", "utf8", (err, data) => {
-    if (err) throw err;
-
-    let notes = JSON.parse(data);
-    newNote.id = notes.length + 1;
-    notes.push(newNote);
-
-    fs.writeFile("db/db.json", JSON.stringify(notes), (err) => {
-      if (err) throw err;
-      console.log("success");
+  console.log(req.body);
+  note
+    .addNote(req.body)
+    .then(function (notes) {
+      res.json(notes);
+      console.log(res.json(notes));
+    })
+    .catch((err) => {
+      res.status(500).json(err);
     });
-
-
-    // data.append(newNote);
-    // fs.writeFile("./db/db.json", data, function (err) {
-    //   if (err) throw err;
-    // });
-  });
 });
 
 app.delete("/api/notes/:id", function (req, res) {
-  Note.findOneAndRemove(
-    {
-      _id: req.params.id,
-    },
-    (err) => {
-      if (err) throw err;
-    }
-  );
+  note
+    .deleteNote(req.params.id)
+    .then(function () {
+      res.json({ ok: true });
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 });
