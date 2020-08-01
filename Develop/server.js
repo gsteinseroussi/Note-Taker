@@ -29,14 +29,17 @@ app.get("*", function (req, res) {
 });
 
 //creating the api routes:
-
+//get route:
 app.get("/api/notes", function (req, res) {
   return res.json(notes);
 });
 
+//post route:
+
 app.post("/api/notes", function (req, res) {
   // let idNum = 1;
   const newNote = req.body;
+
   // idNum++;
   // newNote.id = idNum;
   fs.readFile("db/db.json", "utf8", (err, data) => {
@@ -45,10 +48,12 @@ app.post("/api/notes", function (req, res) {
     let notes = JSON.parse(data);
     newNote.id = notes.length + 1;
     notes.push(newNote);
+
     fs.writeFile("db/db.json", JSON.stringify(notes), (err) => {
       if (err) throw err;
       console.log("success");
     });
+
 
     // data.append(newNote);
     // fs.writeFile("./db/db.json", data, function (err) {
