@@ -35,18 +35,35 @@ app.get("/api/notes", function (req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
+  // let idNum = 1;
   const newNote = req.body;
-  fs.readFile("./db/db.json", "utf8", (err, data) => {
-    if (err) {
-      throw err;
-    }
+  // idNum++;
+  // newNote.id = idNum;
+  fs.readFile("db/db.json", "utf8", (err, data) => {
+    if (err) throw err;
 
-    const dbContent = JSON.parse("data");
-    console.log(dbContent);
+    let notes = JSON.parse(data);
+    newNote.id = notes.length + 1;
+    notes.push(newNote);
+    fs.writeFile("db/db.json", JSON.stringify(notes), (err) => {
+      if (err) throw err;
+      console.log("success");
+    });
 
     // data.append(newNote);
     // fs.writeFile("./db/db.json", data, function (err) {
     //   if (err) throw err;
     // });
   });
+});
+
+app.delete("/api/notes/:id", function (req, res) {
+  Note.findOneAndRemove(
+    {
+      _id: req.params.id,
+    },
+    (err) => {
+      if (err) throw err;
+    }
+  );
 });
