@@ -49,7 +49,9 @@ class Note {
       .then(() => {
         newNote;
       })
-      .then((notes) => resizeBy.json(notes));
+      .then((notes) => {
+        return resizeBy.json(notes);
+      });
   }
 }
 

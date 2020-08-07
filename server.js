@@ -34,15 +34,29 @@ app.get("/api/notes", function (req, res) {
 //post route:
 
 app.post("/api/notes", function (req, res) {
-  console.log(req.body);
-  return note
-    .addNote(req.body)
-    .then((notes) => {
-      res.json(notes);
-    })
-    .catch((err) => {
-      return res.status(500).json(err);
-    });
+  let db = fs.readFileSync("./db/db.json", "utf-8");
+  if (!db) db = "[]"; // if db.json is empty create a string with empty array
+  let parsedDB = JSON.parse(db);
+  const newNote = {
+    id: Math.floor(Math.random() * 10000000),
+    title: req.body.title,
+    text: req.body.text,
+  };
+  parsedDB.push(newNote);
+  parsedDB = JSON.stringify(parsedDB);
+  fs.writeFileSync("./db/db.json", parsedDB);
+  res.json(parsedDB);
+  //   console.log(req.body);
+  //   return note
+  //     .addNote(req.body)
+  //     .then((notes) => {
+  //       let parsedNotes = JSON.stringify(notes);
+  //       console.log(parsedNotes);
+  //       res.json(parsedNotes);
+  //     })
+  //     .catch((err) => {
+  //       return res.status(500).json(err);
+  //     });
 });
 
 app.delete("/api/notes/:id", function (req, res) {
