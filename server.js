@@ -11,20 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-//initiates the server
-
-app.listen(PORT, function () {
-  console.log("App listening on PORT " + PORT);
-});
-
 //creates the html paths
 
 app.get("/notes", function (req, res) {
-  res.sendFile(path.join(__dirname, "public/notes.html"));
-});
-
-app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+  res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
 //creating the api routes:
@@ -75,4 +65,13 @@ app.delete("/api/notes/:id", function (req, res) {
   fs.writeFileSync("db/db.json", stringNote);
 
   res.json(newNotesArray);
+});
+
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+});
+//initiates the server
+
+app.listen(PORT, function () {
+  console.log("App listening on PORT " + PORT);
 });

@@ -1,3 +1,4 @@
 # Note-Taker
 
-This app allows a user to create and store notes online. Once a note is entered and saved, upon refresh the page will display the note on the sidebar.
+This app allows a user to create and store notes online. Upon saving a note, it will post the note into an online database. It will then retrieve and display the notes so the user can revisit them at any time.
+The app also allows the user to delete the notes once they are no longer relevant.
